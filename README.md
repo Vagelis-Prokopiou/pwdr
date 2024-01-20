@@ -2,7 +2,7 @@
 
 A command line utility for repeating a base password.
 
-Other manipulations that are currently supported is alternating the direction of the password.
+Other manipulations that are currently supported are alternating the direction of the password.
 
 ## Examples:
 
