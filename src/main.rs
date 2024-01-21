@@ -1,7 +1,7 @@
 use clap::Parser;
 use pwdr::generate_password;
 
-/// Simple program to greet a person
+/// Program for some password (text) manipulations (repeat, alternate direction).
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
