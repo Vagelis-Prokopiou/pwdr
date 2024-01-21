@@ -20,7 +20,10 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let repeater = args.repeat.into();
+    let repeater = match args.repeat.try_into() {
+        Ok(v) => v,
+        Err(e) => panic!("{}", e),
+    };
     let password = generate_password(&args.password, repeater, args.alternate_direction);
     println!("{}", password);
 }

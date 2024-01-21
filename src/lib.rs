@@ -1,10 +1,14 @@
 pub struct Repeater(i8);
-impl From<i8> for Repeater {
-    fn from(n: i8) -> Self {
-        if n == 0 {
-            panic!("You cannot repear less than 1 times");
+impl TryFrom<i8> for Repeater {
+    type Error = &'static str;
+
+    fn try_from(value: i8) -> Result<Self, Self::Error> {
+        if value == 0 {
+            return Err(
+                "The provided value must comply to the following invariant: 1 <= value <= 127",
+            );
         }
-        return Self(n);
+        return Ok(Self(value));
     }
 }
 
@@ -46,7 +50,18 @@ pub fn generate_password(password: &str, repeater: Repeater, alternate_direction
 
 #[cfg(test)]
 mod tests {
-    use crate::generate_password;
+    use crate::{generate_password, Repeater};
+
+    #[test]
+    fn creating_a_repeater_with_0_value_returns_error() {
+        let repeater_result: Result<Repeater, _> = 0.try_into();
+        assert!(repeater_result.is_err());
+        let error = repeater_result.err().unwrap();
+        assert_eq!(
+            "The provided value must comply to the following invariant: 1 <= value <= 127",
+            error
+        );
+    }
 
     #[test]
     fn generate_password_correctly_repeats_with_direction_alternation() {
@@ -54,18 +69,18 @@ mod tests {
         let alternate_password = "321fedcBa";
         assert_eq!(
             format!("{}{}", password, alternate_password),
-            generate_password(&password, 2.into(), true)
+            generate_password(&password, 2.try_into().unwrap(), true)
         );
         assert_eq!(
             format!("{}{}{}", password, alternate_password, password),
-            generate_password(&password, 3.into(), true)
+            generate_password(&password, 3.try_into().unwrap(), true)
         );
         assert_eq!(
             format!(
                 "{}{}{}{}",
                 password, alternate_password, password, alternate_password
             ),
-            generate_password(&password, 4.into(), true)
+            generate_password(&password, 4.try_into().unwrap(), true)
         );
     }
 
@@ -74,15 +89,15 @@ mod tests {
         let password = "aBcdef123";
         assert_eq!(
             format!("{}{}", password, password),
-            generate_password(&password, 2.into(), false)
+            generate_password(&password, 2.try_into().unwrap(), false)
         );
         assert_eq!(
             format!("{}{}{}", password, password, password),
-            generate_password(&password, 3.into(), false)
+            generate_password(&password, 3.try_into().unwrap(), false)
         );
         assert_eq!(
             format!("{}{}{}{}", password, password, password, password),
-            generate_password(&password, 4.into(), false)
+            generate_password(&password, 4.try_into().unwrap(), false)
         );
     }
 
@@ -90,7 +105,13 @@ mod tests {
     fn generate_password_returns_initial_pasword_if_repeat_is_one_regardles_of_direction_alternation(
     ) {
         let password = "aBcdef123";
-        assert_eq!(password, generate_password(&password, 1.into(), true));
-        assert_eq!(password, generate_password(&password, 1.into(), false));
+        assert_eq!(
+            password,
+            generate_password(&password, 1.try_into().unwrap(), true)
+        );
+        assert_eq!(
+            password,
+            generate_password(&password, 1.try_into().unwrap(), false)
+        );
     }
 }
