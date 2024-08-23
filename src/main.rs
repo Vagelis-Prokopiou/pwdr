@@ -5,11 +5,9 @@ use pwdr::generate_password;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// The initial password
-    #[arg(short('p'), long)]
     password: String,
 
-    /// The number of times to repeat the initial password
+    /// The number of times to repeat the password
     #[arg(short('r'), long, default_value_t = 1)]
     repeat: i8,
 
