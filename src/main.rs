@@ -22,7 +22,6 @@ fn main() {
         Ok(v) => v,
         Err(e) => panic!("{}", e),
     };
-    let alternate_direction = args.alternate_direction.into();
-    let password = generate_password(&args.password, repeater, alternate_direction);
+    let password = generate_password(&args.password, repeater, args.alternate_direction.into());
     println!("{}", password);
 }

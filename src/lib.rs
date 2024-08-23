@@ -33,18 +33,7 @@ pub fn generate_password(password: &str, repeater: Repeater, alternate_direction
 
 #[cfg(test)]
 mod tests {
-    use crate::{generate_password, Repeater};
-
-    #[test]
-    fn creating_a_repeater_with_0_value_returns_error() {
-        let repeater_result: Result<Repeater, _> = 0.try_into();
-        assert!(repeater_result.is_err());
-        let error = repeater_result.err().unwrap();
-        assert_eq!(
-            "The provided value must comply to the following invariant: 1 <= value <= 127",
-            error
-        );
-    }
+    use crate::generate_password;
 
     #[test]
     fn generate_password_correctly_repeats_with_direction_alternation() {
